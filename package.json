@@ -37,5 +37,9 @@
     "publish": "cd ./publish && npm publish --access public"
   },
   "author": "Alex Serebryakov",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlexRarus/front-micro-services"
+  }
 }
