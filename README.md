@@ -10,7 +10,7 @@ $ npm i --save @truefalse/front-micro-services
 ```
 ## Example Usage
 Create Module:
-```jsx
+```js
 // in module project
 import React from 'react';
 import { createModule } from '@truefalse/front-micro-services';
@@ -38,7 +38,7 @@ export default createModule(ChildApplication);
 
 Include module in parent
 
-```jsx
+```js
 // in parent project
 import React from 'react';
 import { ModuleInstance } from '@truefalse/front-micro-services';
