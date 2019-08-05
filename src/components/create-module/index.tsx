@@ -9,7 +9,7 @@ interface IState {
   width: number;
 }
 
-export function createModule<TProps>(TargetComponent: any) {
+export function createModule<TProps>(TargetComponent: any): any {
   const handlers: any[] = [];
 
   class WrapperModule extends Component<TProps, IState> {
