@@ -6,14 +6,14 @@ The Micro-services library exported as a [UMD](https://github.com/umdjs/umd) mod
 
 Using npm:
 ```shell
-$ npm i --save micro-services
+$ npm i --save @truefalse/front-micro-services
 ```
 ## Example Usage
 Create Module:
 ```jsx
 // in module project
 import React from 'react';
-import { createModule } from 'micro-services';
+import { createModule } from '@truefalse/front-micro-services';
 
 class ChildApplication extends Component {
   static propTypes = {
@@ -41,7 +41,7 @@ Include module in parent
 ```jsx
 // in parent project
 import React from 'react';
-import { ModuleInstance } from 'micro-services';
+import { ModuleInstance } from '@truefalse/front-micro-services';
 
 class ParentApplication extends Component {
   render() {
