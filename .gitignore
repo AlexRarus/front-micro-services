@@ -2,3 +2,5 @@
 node_modules/
 public/
 dist/
+src/components/lib/
+publish/

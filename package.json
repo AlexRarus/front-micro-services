@@ -4,15 +4,19 @@
   "description": "",
   "main": "webpack.config.babel.js",
   "dependencies": {
+    "lodash": "^4.17.15",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "styled-components": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
+    "@types/lodash": "^4.14.136",
     "@types/react": "^16.8.24",
     "@types/react-dom": "^16.8.5",
+    "@types/styled-components": "4.1.8",
     "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^3.2.0",
@@ -27,7 +31,10 @@
   },
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --progress",
-    "build": "NODE_ENV=production webpack --progress"
+    "build": "NODE_ENV=production webpack --progress",
+    "build:components": "cd ./src/components && npm run build",
+    "patch": "cd ./src/components && npm version patch",
+    "publish": "cd ./publish-components && npm publish"
   },
   "author": "",
   "license": "ISC"

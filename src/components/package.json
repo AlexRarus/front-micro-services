@@ -1,0 +1,16 @@
+{
+  "name": "micro-services",
+  "version": "1.0.1",
+  "description": "",
+  "main": "webpack.config.babel.js",
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "react": "^16.8.6",
+    "styled-components": "^4.3.2"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production tsc"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "baseUrl": "../../",
+    "noEmit": false,
+    "jsx": "react",
+    "sourceMap": false
+  },
+  "include": [
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/example.tsx"
+  ]
+}
