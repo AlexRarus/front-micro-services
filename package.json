@@ -1,0 +1,34 @@
+{
+  "name": "micro-services",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.babel.js",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "@types/react": "^16.8.24",
+    "@types/react-dom": "^16.8.5",
+    "awesome-typescript-loader": "^5.2.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "path": "^0.12.7",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.5.3",
+    "typescript-plugin-styled-components": "^1.4.3",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-config": "^7.5.0",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development webpack-dev-server --progress",
+    "build": "NODE_ENV=production webpack --progress"
+  },
+  "author": "",
+  "license": "ISC"
+}

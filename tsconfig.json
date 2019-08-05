@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "outDir": "./public/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "lib": ["dom", "es2015", "es2016"],
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "paths": {
+      "src/*": ["src/*"],
+      "components/*": ["src/components/*"]
+    }
+  },
+  "include": [
+    "./src/**/*",
+    "types"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.js"
+  ],
+  "files": [
+    "./src/index.tsx"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useWebpackText": true,
+    "useTranspileModule": true
+  }
+}
