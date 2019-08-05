@@ -4,3 +4,5 @@ public/
 dist/
 src/components/lib/
 publish/
+
+.npmrc

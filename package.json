@@ -1,5 +1,5 @@
 {
-  "name": "micro-services",
+  "name": "@truefalse/front-micro-services",
   "version": "1.0.0",
   "description": "",
   "main": "webpack.config.babel.js",
@@ -36,6 +36,6 @@
     "patch": "cd ./src/components && npm version patch",
     "publish": "cd ./publish && npm publish"
   },
-  "author": "",
+  "author": "Alex Serebryakov",
   "license": "ISC"
 }

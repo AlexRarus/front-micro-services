@@ -1,6 +1,6 @@
 {
-  "name": "micro-services",
-  "version": "1.0.6",
+  "name": "@truefalse/front-micro-services",
+  "version": "1.0.7",
   "description": "",
   "main": "webpack.config.babel.js",
   "dependencies": {
@@ -11,6 +11,6 @@
   "scripts": {
     "build": "NODE_ENV=production tsc"
   },
-  "author": "",
+  "author": "Alex Serebryakov",
   "license": "ISC"
 }
