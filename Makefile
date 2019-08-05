@@ -1,5 +1,5 @@
 move_package_core:
-	rsync -a --include '*' ./src/components/lib/components/ ./publish;\
+	rsync -a --include '*' ./src/components/lib/src/components/ ./publish;\
 	cp ./src/components/package.json ./publish/;\
 
 publish:
