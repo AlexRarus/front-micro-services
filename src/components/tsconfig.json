@@ -15,6 +15,6 @@
     "**/example.tsx"
   ],
   "files": [
-    "./src/components/index.ts"
+    "index.ts"
   ]
 }

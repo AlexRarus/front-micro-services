@@ -2,7 +2,7 @@ move_package_core:
 	rsync -a --include '*' ./src/components/lib/src/components/ ./publish;\
 	cp ./src/components/package.json ./publish/;\
 
-publish:
+components_publish:
 	npm run build:components;\
 	npm run patch;\
 	make move_package_core;\
