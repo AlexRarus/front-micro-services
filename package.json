@@ -43,8 +43,8 @@
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --progress",
     "build": "NODE_ENV=production webpack --progress",
-    "build:components": "cd ./src/components && npm run build",
-    "patch": "cd ./src/components && npm version patch",
+    "build:fms": "cd ./src/components/core && npm run build",
+    "patch": "cd ./src/components/core && npm version patch",
     "publish": "cd ./publish && npm publish --access public"
   },
   "author": "Alex Serebryakov",

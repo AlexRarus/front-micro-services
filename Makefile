@@ -4,7 +4,7 @@ move_package_core:
 	cp ./README.md ./publish/;\
 
 fms_publish:
-	npm run build:components;\
+	npm run build:fms;\
 	npm run patch;\
 	make move_package_core;\
 	git add .; \
