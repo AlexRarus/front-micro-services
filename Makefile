@@ -1,6 +1,6 @@
 move_package_core:
-	rsync -a --include '*' ./src/components/core/lib/src/components/ ./publish;\
-	cp ./src/components/package.json ./publish/;\
+	rsync -a --include '*' ./src/components/core/lib/src/components/core/ ./publish;\
+	cp ./src/components/core/package.json ./publish/;\
 	cp ./README.md ./publish/;\
 
 fms_publish:
