@@ -3,7 +3,7 @@ import { subscribeOnMessage, sendMessage, resizeWindow } from '../service';
 import {
   Label,
   MessageWrapper,
-  ComingMessagesList,
+  IncomingMessagesList,
   SentMessagesList,
   Message,
   Row,
@@ -15,14 +15,14 @@ interface IProps {}
 
 interface IState {
   value: string;
-  comingMessages: any[];
+  incomingMessages: any[];
   sentMessages: any[];
 }
 
 export default class MessageComponent extends Component<IProps, IState> {
   state: IState = {
     value: '',
-    comingMessages: [],
+    incomingMessages: [],
     sentMessages: []
   };
 
@@ -55,10 +55,10 @@ export default class MessageComponent extends Component<IProps, IState> {
   };
 
   getMessage = (message: any) => {
-    const { comingMessages } = this.state;
+    const { incomingMessages } = this.state;
 
     this.setState({
-      comingMessages: [...comingMessages, message]
+      incomingMessages: [...incomingMessages, message]
     })
   };
 
@@ -75,7 +75,7 @@ export default class MessageComponent extends Component<IProps, IState> {
   };
 
   render() {
-    const { value, comingMessages, sentMessages } = this.state;
+    const { value, incomingMessages, sentMessages } = this.state;
 
     return(
       <MessageWrapper>
@@ -89,10 +89,10 @@ export default class MessageComponent extends Component<IProps, IState> {
             <Label>Отправленные сообщения:</Label>
             {sentMessages.map(this.renderMessages)}
           </SentMessagesList>
-          <ComingMessagesList>
+          <IncomingMessagesList>
             <Label>Полученные сообщения:</Label>
-            {comingMessages.map(this.renderMessages)}
-          </ComingMessagesList>
+            {incomingMessages.map(this.renderMessages)}
+          </IncomingMessagesList>
         </Row>
       </MessageWrapper>
     );

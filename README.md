@@ -38,7 +38,7 @@ class FrontendMicroService extends Component {
     return (
       <ServiceApplicationWrapper>
         <Application />
-      </ExternalApplicationWrapper>
+      </ServiceApplicationWrapper>
     );
   }
 }
@@ -55,7 +55,7 @@ import { subscribeOnMessage, sendMessage, resizeWindow } from './service';
 import {
   Label,
   MessageWrapper,
-  ComingMessagesList,
+  IncomingMessagesList,
   SentMessagesList,
   Message,
   Row,
@@ -66,7 +66,7 @@ import {
 export default class Application extends Component {
   state = {
     value: '',
-    comingMessages: [],
+    incomingMessages: [],
     sentMessages: []
   };
 
@@ -99,10 +99,10 @@ export default class Application extends Component {
   };
 
   getMessage = (message) => {
-    const { comingMessages } = this.state;
+    const { incomingMessages } = this.state;
 
     this.setState({
-      comingMessages: [...comingMessages, message]
+      incomingMessages: [...incomingMessages, message]
     })
   };
 
@@ -119,24 +119,24 @@ export default class Application extends Component {
   };
 
   render() {
-    const { value, comingMessages, sentMessages } = this.state;
+    const { value, incomingMessages, sentMessages } = this.state;
 
     return(
       <MessageWrapper>
         <Row>
           <Input onChange={this.onChange} value={value} />
-          <Button onClick={this.sendMessage}>Отправить сообщение родителю</Button>
-          <Button onClick={this.resizeWindow}>resize window</Button>
+          <Button onClick={this.sendMessage}>Send message to parent</Button>
+          <Button onClick={this.resizeWindow}>Resize window</Button>
         </Row>
         <Row>
           <SentMessagesList>
             <Label>Отправленные сообщения:</Label>
             {sentMessages.map(this.renderMessages)}
           </SentMessagesList>
-          <ComingMessagesList>
+          <IncomingMessagesList>
             <Label>Полученные сообщения:</Label>
-            {comingMessages.map(this.renderMessages)}
-          </ComingMessagesList>
+            {incomingMessages.map(this.renderMessages)}
+          </IncomingMessagesList>
         </Row>
       </MessageWrapper>
     );
@@ -194,7 +194,7 @@ import React, { Component } from 'react';
 import {
   Label,
   MessageWrapper,
-  ComingMessagesList,
+  IncomingMessagesList,
   SentMessagesList,
   Message,
   Row,
@@ -205,7 +205,7 @@ import {
 export default class MessageComponent extends Component {
   state = {
     value: '',
-    comingMessages: [],
+    incomingMessages: [],
     sentMessages: []
   };
 
@@ -246,13 +246,13 @@ export default class MessageComponent extends Component {
 
   getMessage = (event) => {
     const { data } = event;
-    const { comingMessages } = this.state;
+    const { incomingMessages } = this.state;
 
     try {
       const parsedData: any = JSON.parse(data);
 
       this.setState({
-        comingMessages: [...comingMessages, parsedData]
+        incomingMessages: [...incomingMessages, parsedData]
       });
     } catch (error) {
       console.log(error);
@@ -268,7 +268,7 @@ export default class MessageComponent extends Component {
   };
 
   render() {
-    const { value, comingMessages, sentMessages } = this.state;
+    const { value, incomingMessages, sentMessages } = this.state;
 
     return(
       <MessageWrapper>
@@ -281,10 +281,10 @@ export default class MessageComponent extends Component {
             <Label>Отправленные сообщения:</Label>
             {sentMessages.map(this.renderMessages)}
           </SentMessagesList>
-          <ComingMessagesList>
+          <IncomingMessagesList>
             <Label>Полученные сообщения:</Label>
-            {comingMessages.map(this.renderMessages)}
-          </ComingMessagesList>
+            {incomingMessages.map(this.renderMessages)}
+          </IncomingMessagesList>
         </Row>
       </MessageWrapper>
     );

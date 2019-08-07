@@ -10,7 +10,7 @@ export const MessageWrapper: any = styled.div`
   flex-direction: column;
 `;
 
-export const ComingMessagesList: any = styled.div`
+export const IncomingMessagesList: any = styled.div`
   display: flex;
   flex-direction: column;
   background: black; 
