@@ -15,7 +15,9 @@
     "rootDir": ".",
     "paths": {
       "src/*": ["src/*"],
-      "components/*": ["src/components/*"]
+      "components/*": ["src/components/*"],
+      "containers/*": ["src/containers/*"],
+      "dal/*": ["src/dal/*"]
     }
   },
   "include": [

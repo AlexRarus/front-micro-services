@@ -2,13 +2,13 @@ import React, { Component, createRef } from 'react';
 import debounce from 'lodash/debounce';
 
 import {
-  ModuleWrapper,
-  ModuleFrame
+  ServiceLoaderWrapper,
+  ServiceFrame
 } from './style';
 
 interface IProps {
-  name: string;
-  moduleUrl: string;
+  id: string;
+  src: string;
 }
 
 interface IState {
@@ -17,9 +17,14 @@ interface IState {
   regExp: any;
 }
 
-export class ModuleInstance extends Component<IProps, IState> {
+interface IMessageType {
+  type: string;
+  payload?: any;
+}
+
+export class ServiceLoader extends Component<IProps, IState> {
   componentRef: any;
-  moduleRef: any;
+  frameRef: any;
 
   constructor(props: IProps) {
     super(props);
@@ -32,7 +37,7 @@ export class ModuleInstance extends Component<IProps, IState> {
 
     window.addEventListener('message', this.getMessage);
     this.componentRef = createRef();
-    this.moduleRef = createRef();
+    this.frameRef = createRef();
   }
 
   componentDidMount(): void {
@@ -49,19 +54,19 @@ export class ModuleInstance extends Component<IProps, IState> {
     const payload = {
       width: componentMetrics.width
     };
-    this.sendMessage('resize', payload);
+    this.sendMessage({ type: 'resize', payload });
   }, 100);
 
   getMessage = (e: any) => {
-    const { moduleUrl } = this.props;
+    const { src } = this.props;
     const { initialized, regExp } = this.state;
     const { data, origin } = e;
     const targetRegExp: any = initialized
       ? regExp
       : new RegExp(`^${origin}`);
 
-    // обрабатываем только сообщения для данного модуля
-    if (targetRegExp.test(moduleUrl)) {
+    // обрабатываем только сообщения для данного сервиса
+    if (targetRegExp.test(src)) {
       try {
         const parsedData: any = JSON.parse(data);
 
@@ -78,13 +83,13 @@ export class ModuleInstance extends Component<IProps, IState> {
     }
   };
 
-  sendMessage = (type: string, payload: any = {}) => {
+  sendMessage = ({ type, payload = {} }: IMessageType) => {
     const data = {
       type,
       payload
     };
     const jsonData = JSON.stringify(data);
-    const moduleFrame = this.moduleRef.current;
+    const moduleFrame = this.frameRef.current;
     moduleFrame.contentWindow.postMessage(jsonData, '*');
   };
 
@@ -95,16 +100,16 @@ export class ModuleInstance extends Component<IProps, IState> {
   };
 
   actionSwitcher = (data: any) => {
-    const { type, payload } = data;
+    const { type, payload }  = data;
 
     switch (type) {
       case 'init':
-        this.setState(payload);
+        payload && this.setState(payload);
         const componentMetrics = this.getMetrics();
         const initData = {
           width: componentMetrics.width
         };
-        this.sendMessage('init', initData);
+        this.sendMessage({ type: 'init', payload: initData });
         break;
       case 'resize':
         this.setState(payload);
@@ -115,20 +120,20 @@ export class ModuleInstance extends Component<IProps, IState> {
   };
 
   render() {
-    const { moduleUrl, name } = this.props;
+    const { src, id } = this.props;
     const { height } = this.state;
 
     return (
-      <ModuleWrapper ref={this.componentRef}>
-        <ModuleFrame
-          ref={this.moduleRef}
-          src={moduleUrl}
-          name={name}
+      <ServiceLoaderWrapper ref={this.componentRef}>
+        <ServiceFrame
+          ref={this.frameRef}
+          src={src}
+          id={id}
           height={height}
           frameBorder="0"
           scrolling="no"
         />
-      </ModuleWrapper>
+      </ServiceLoaderWrapper>
     );
   }
 }

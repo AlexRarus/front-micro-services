@@ -1,13 +1,14 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
-interface IModuleProps {
+interface IServiceProps {
   width: number;
+  isInit: boolean;
 }
 
-export const ModuleInnerWrapper: any = styled.div`
+export const ServiceWrapper: any = styled.div`
   box-sizing: border-box;
   position: absolute;
-  width: ${({ width }: IModuleProps) => `${width}px`};
+  width: ${({ width }: IServiceProps) => `${width}px`};
 `;
 
 export const GlobalStyle = createGlobalStyle`

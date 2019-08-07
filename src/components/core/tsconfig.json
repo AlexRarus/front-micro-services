@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig",
+  "extends": "../../../tsconfig",
   "compilerOptions": {
     "outDir": "./lib",
     "baseUrl": "../../",
@@ -9,13 +9,13 @@
     "declaration": true
   },
   "include": [
-    "index.ts"
+    "common/index.ts"
   ],
   "exclude": [
     "node_modules",
     "**/example.tsx"
   ],
   "files": [
-    "index.ts"
+    "common/index.ts"
   ]
 }

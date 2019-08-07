@@ -4,11 +4,11 @@ interface IFrameProps {
   height: number;
 }
 
-export const ModuleWrapper: any = styled.div`
+export const ServiceLoaderWrapper: any = styled.div`
   box-sizing: border-box;
 `;
 
-export const ModuleFrame: any = styled.iframe`
+export const ServiceFrame: any = styled.iframe`
   display: block;
   border: none;
   outline: none;

@@ -1,6 +1,6 @@
-# Micro-services
+# Front-Micro-Services
 
-The Micro-services library exported as a [UMD](https://github.com/umdjs/umd) module.
+The Front-Micro-Services library exported as a [UMD](https://github.com/umdjs/umd) module.
 
 ## Installation
 
@@ -9,53 +9,286 @@ Using npm:
 $ npm i --save @truefalse/front-micro-services
 ```
 ## Example Usage
-Create Module:
-```jsx
-// in module project
-import React, { Component } from 'react';
-import { createModule } from '@truefalse/front-micro-services';
+Create Service:
+```js
+// service.js
+import { Service } from '@truefalse/front-micro-services';
 
-class ChildApplication extends Component {
-  static propTypes = {
-    // pass from createModule
-    resize: PropTypes.func,
-    sibscribeOnMessage: PropTypes.func,
-    sendMessage: PropTypes.func,
-    // ...otherProps
+export const {
+  loadComponent, // load component as service
+  resizeWindow, // resizing a service window when resizing its content
+  sendMessage, // send message to parent
+  subscribeOnMessage // subscription to incoming messages
+} = new Service();
+
+```
+
+Load component as service
+```jsx
+// service application index.jsx
+import React, { Component } from 'react';
+import { loadComponent } from './service.js';
+import Application from './application.jsx';
+import {
+  ServiceApplicationWrapper
+} from './style';
+
+class FrontendMicroService extends Component {
+  render() {
+    return (
+      <ServiceApplicationWrapper>
+        <Application />
+      </ExternalApplicationWrapper>
+    );
+  }
+}
+
+export default loadComponent(FrontendMicroService); // load component as service
+
+```
+
+Use service's hooks
+```jsx
+// application.jsx
+import React, { Component } from 'react';
+import { subscribeOnMessage, sendMessage, resizeWindow } from './service';
+import {
+  Label,
+  MessageWrapper,
+  ComingMessagesList,
+  SentMessagesList,
+  Message,
+  Row,
+  Input,
+  Button
+} from './style';
+
+export default class Application extends Component {
+  state = {
+    value: '',
+    comingMessages: [],
+    sentMessages: []
+  };
+
+  componentDidMount() {
+    subscribeOnMessage(this.getMessage); // subscription to incoming messages
+  }
+
+  onChange = (e) => {
+    const target = e.target;
+    const value = target.value;
+
+    this.setState({
+      value
+    });
+  };
+
+  sendMessage = () => {
+    const { value, sentMessages } = this.state;
+    const message = {
+      type: 'service',
+      payload: { value }
+    };
+
+    sendMessage(message); // send message to parent
+
+    this.setState({
+      sentMessages: [...sentMessages, message],
+      value: ''
+    })
+  };
+
+  getMessage = (message) => {
+    const { comingMessages } = this.state;
+
+    this.setState({
+      comingMessages: [...comingMessages, message]
+    })
+  };
+
+  resizeWindow = () => {
+    resizeWindow(); // resizing a service window when resizing its content
+  };
+
+  renderMessages = (message, index) => {
+    return (
+      <Message key={index}>
+        {JSON.stringify(message)}
+      </Message>
+    );
   };
 
   render() {
-    return (
-      <div>
-      	child application
-      </div>
+    const { value, comingMessages, sentMessages } = this.state;
+
+    return(
+      <MessageWrapper>
+        <Row>
+          <Input onChange={this.onChange} value={value} />
+          <Button onClick={this.sendMessage}>Отправить сообщение родителю</Button>
+          <Button onClick={this.resizeWindow}>resize window</Button>
+        </Row>
+        <Row>
+          <SentMessagesList>
+            <Label>Отправленные сообщения:</Label>
+            {sentMessages.map(this.renderMessages)}
+          </SentMessagesList>
+          <ComingMessagesList>
+            <Label>Полученные сообщения:</Label>
+            {comingMessages.map(this.renderMessages)}
+          </ComingMessagesList>
+        </Row>
+      </MessageWrapper>
     );
   }
 }
 
-export default createModule(ChildApplication);
+
 ```
 
-Include module in parent
+
+Include service in parent
 
 ```jsx
-// in parent project
 import React, { Component } from 'react';
-import { ModuleInstance } from '@truefalse/front-micro-services';
+import { ServiceLoader } from '@truefalse/front-micro-services'
+import MessageComponent from './message-component.jsx';
+import {
+  Wrapper,
+  Block,
+  Title,
+  Paragraph
+} from './style';
 
-class ParentApplication extends Component {
+export default class ServiceLoaderExample extends Component {
   render() {
     return (
-      <div>
-        <ModuleInstance
-          moduleUrl="http://childmodule.com" // url to module
-          name="childmodule"
-        >
-      </div>
+      <Wrapper>
+        <Title>
+          Service Loader Example:
+        </Title>
+        <Block>
+          <Paragraph>
+            Родительский компонент
+          </Paragraph>
+          <MessageComponent
+            serviceId="service-id"
+          />
+        </Block>
+        <ServiceLoader
+          id="service-id"
+          src="http://localhost:3333/service"
+        />
+      </Wrapper>
     );
   }
 }
 
-export default ParentApplication;
 ```
 
+Parent communication with the service
+
+```jsx
+// message-component.jsx
+import React, { Component } from 'react';
+import {
+  Label,
+  MessageWrapper,
+  ComingMessagesList,
+  SentMessagesList,
+  Message,
+  Row,
+  Input,
+  Button
+} from './style';
+
+export default class MessageComponent extends Component {
+  state = {
+    value: '',
+    comingMessages: [],
+    sentMessages: []
+  };
+
+  componentDidMount() {
+    window.addEventListener('message', this.getMessage); // subscribe on messages
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('message', this.getMessage); // unsubscribe
+  }
+
+  onChange = (e) => {
+    const target = e.target;
+    const value = target.value;
+
+    this.setState({
+      value
+    });
+  };
+
+  sendMessage = () => {
+    const { serviceId } = this.props;
+    const { value, sentMessages } = this.state;
+    const message = {
+      type: 'parent',
+      payload: { value }
+    };
+    const jsonData = JSON.stringify(message);
+    const serviceFrame = document.getElementById(serviceId);
+
+    serviceFrame && serviceFrame.contentWindow.postMessage(jsonData, '*'); // send message to service
+
+    this.setState({
+      sentMessages: [...sentMessages, message],
+      value: ''
+    })
+  };
+
+  getMessage = (event) => {
+    const { data } = event;
+    const { comingMessages } = this.state;
+
+    try {
+      const parsedData: any = JSON.parse(data);
+
+      this.setState({
+        comingMessages: [...comingMessages, parsedData]
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  renderMessages = (message, index) => {
+    return (
+      <Message key={index}>
+        {JSON.stringify(message)}
+      </Message>
+    );
+  };
+
+  render() {
+    const { value, comingMessages, sentMessages } = this.state;
+
+    return(
+      <MessageWrapper>
+        <Row>
+          <Input onChange={this.onChange} value={value} />
+          <Button onClick={this.sendMessage}>Отправить сообщение сервису</Button>
+        </Row>
+        <Row>
+          <SentMessagesList>
+            <Label>Отправленные сообщения:</Label>
+            {sentMessages.map(this.renderMessages)}
+          </SentMessagesList>
+          <ComingMessagesList>
+            <Label>Полученные сообщения:</Label>
+            {comingMessages.map(this.renderMessages)}
+          </ComingMessagesList>
+        </Row>
+      </MessageWrapper>
+    );
+  }
+}
+
+```
