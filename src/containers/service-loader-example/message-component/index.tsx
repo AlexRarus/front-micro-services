@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { MessageEmitter, IMessageEmitter, IMessage } from 'components/core';
+
 import {
   Label,
   MessageWrapper,
@@ -20,6 +22,11 @@ interface IState {
   sentMessages: any[];
 }
 
+const messageEmitter: IMessageEmitter = new MessageEmitter({
+  sender: 'service-example',
+  receiver: 'service-example'
+});
+
 export default class MessageComponent extends Component<IProps, IState> {
   state: IState = {
     value: '',
@@ -28,11 +35,11 @@ export default class MessageComponent extends Component<IProps, IState> {
   };
 
   componentDidMount() {
-    window.addEventListener('message', this.getMessage);
+    messageEmitter.subscribeOnMessages(this.getMessage);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('message', this.getMessage);
+    messageEmitter.destroy();
   }
 
   onChange = (e: any) => {
@@ -45,16 +52,13 @@ export default class MessageComponent extends Component<IProps, IState> {
   };
 
   sendMessage = () => {
-    const { serviceId } = this.props;
     const { value, sentMessages } = this.state;
     const message: any = {
       type: 'parent',
       payload: { value }
     };
-    const jsonData: string = JSON.stringify(message);
-    const serviceFrame: any = document.getElementById(serviceId);
 
-    serviceFrame && serviceFrame.contentWindow.postMessage(jsonData, '*');
+    messageEmitter.submitMessage(message);
 
     this.setState({
       sentMessages: [...sentMessages, message],
@@ -62,22 +66,15 @@ export default class MessageComponent extends Component<IProps, IState> {
     })
   };
 
-  getMessage = (event: any) => {
-    const { data } = event;
+  getMessage = (message: IMessage) => {
     const { incomingMessages } = this.state;
 
-    try {
-      const parsedData: any = JSON.parse(data);
-
-      this.setState({
-        incomingMessages: [...incomingMessages, parsedData]
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.setState({
+      incomingMessages: [...incomingMessages, message]
+    });
   };
 
-  renderMessages = (message: any, index: number) => {
+  renderMessage = (message: any, index: number) => {
     return (
       <Message key={index}>
         {JSON.stringify(message)}
@@ -88,7 +85,7 @@ export default class MessageComponent extends Component<IProps, IState> {
   render() {
     const { value, incomingMessages, sentMessages } = this.state;
 
-    return(
+    return (
       <MessageWrapper>
         <Row>
           <Input onChange={this.onChange} value={value} />
@@ -97,11 +94,11 @@ export default class MessageComponent extends Component<IProps, IState> {
         <Row>
           <SentMessagesList>
             <Label>Отправленные сообщения:</Label>
-            {sentMessages.map(this.renderMessages)}
+            {sentMessages.map(this.renderMessage)}
           </SentMessagesList>
           <IncomingMessagesList>
             <Label>Полученные сообщения:</Label>
-            {incomingMessages.map(this.renderMessages)}
+            {incomingMessages.map(this.renderMessage)}
           </IncomingMessagesList>
         </Row>
       </MessageWrapper>

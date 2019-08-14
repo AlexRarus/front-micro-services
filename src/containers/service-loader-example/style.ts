@@ -4,6 +4,10 @@ export const Wrapper: any = styled.div`
   padding: 20px;
 `;
 
+export const ServiceLoaderWrapper: any = styled.div`
+  transition: all 200ms;
+`;
+
 export const Block: any = styled.div`
   border: 1px solid grey;
   border-radius: 2px;

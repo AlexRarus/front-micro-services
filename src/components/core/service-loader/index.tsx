@@ -1,5 +1,5 @@
-import React, { Component, createRef } from 'react';
-import debounce from 'lodash/debounce';
+import React, { Component } from 'react';
+import { MessageEmitter, IMessageEmitter, IMessage } from 'components/core';
 
 import {
   ServiceLoaderWrapper,
@@ -14,102 +14,38 @@ interface IProps {
 interface IState {
   initialized: boolean;
   height: number;
-  regExp: any;
-}
-
-interface IMessageType {
-  type: string;
-  payload?: any;
 }
 
 export class ServiceLoader extends Component<IProps, IState> {
-  componentRef: any;
-  frameRef: any;
+  messageEmitter: IMessageEmitter;
 
   constructor(props: IProps) {
     super(props);
 
     this.state = {
       initialized: false,
-      height: 0,
-      regExp: new RegExp('')
+      height: 0
     };
 
-    window.addEventListener('message', this.getMessage);
-    this.componentRef = createRef();
-    this.frameRef = createRef();
-  }
+    this.messageEmitter = new MessageEmitter({
+      sender: props.id,
+      receiver: props.id
+    });
+    this.messageEmitter.subscribeOnMessages(this.actionSwitcher);
 
-  componentDidMount(): void {
-    window.addEventListener('resize', this.onResize);
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener('message', this.getMessage);
-    window.removeEventListener('resize', this.onResize);
+    this.messageEmitter.destroy();
   }
 
-  onResize = debounce(() => {
-    const componentMetrics = this.getMetrics();
-    const payload = {
-      width: componentMetrics.width
-    };
-    this.sendMessage({ type: 'resize', payload });
-  }, 100);
-
-  getMessage = (e: any) => {
-    const { src } = this.props;
-    const { initialized, regExp } = this.state;
-    const { data, origin } = e;
-    const targetRegExp: any = initialized
-      ? regExp
-      : new RegExp(`^${origin}`);
-
-    // обрабатываем только сообщения для данного сервиса
-    if (targetRegExp.test(src)) {
-      try {
-        const parsedData: any = JSON.parse(data);
-
-        this.actionSwitcher(parsedData);
-        if (!initialized) {
-          this.setState({
-            initialized: true,
-            regExp: targetRegExp
-          })
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  sendMessage = ({ type, payload = {} }: IMessageType) => {
-    const data = {
-      type,
-      payload
-    };
-    const jsonData = JSON.stringify(data);
-    const moduleFrame = this.frameRef.current;
-    moduleFrame.contentWindow.postMessage(jsonData, '*');
-  };
-
-  getMetrics = () => {
-    const component: any = this.componentRef.current;
-
-    return component.getBoundingClientRect();
-  };
-
-  actionSwitcher = (data: any) => {
+  actionSwitcher = (data: IMessage) => {
     const { type, payload }  = data;
 
     switch (type) {
       case 'init':
         payload && this.setState(payload);
-        const componentMetrics = this.getMetrics();
-        const initData = {
-          width: componentMetrics.width
-        };
-        this.sendMessage({ type: 'init', payload: initData });
+        this.messageEmitter.submitMessage({ type: 'init' });
         break;
       case 'resize':
         this.setState(payload);
@@ -124,14 +60,13 @@ export class ServiceLoader extends Component<IProps, IState> {
     const { height } = this.state;
 
     return (
-      <ServiceLoaderWrapper ref={this.componentRef}>
+      <ServiceLoaderWrapper>
         <ServiceFrame
-          ref={this.frameRef}
           src={src}
           id={id}
+          name={id}
           height={height}
           frameBorder="0"
-          scrolling="no"
         />
       </ServiceLoaderWrapper>
     );

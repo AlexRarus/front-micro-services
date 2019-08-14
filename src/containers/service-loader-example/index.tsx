@@ -5,7 +5,8 @@ import {
   Wrapper,
   Block,
   Title,
-  Paragraph
+  Paragraph,
+  ServiceLoaderWrapper
 } from './style';
 
 interface IProps {}
@@ -24,10 +25,12 @@ export default class ServiceLoaderExample extends Component<IProps> {
           <MessageComponent
             serviceId="service-id"
           />
-          <ServiceLoader
-            id="service-id"
-            src="http://localhost:3333/service"
-          />
+          <ServiceLoaderWrapper>
+            <ServiceLoader
+              id="service-example"
+              src="http://localhost:3333/service"
+            />
+          </ServiceLoaderWrapper>
         </Block>
       </Wrapper>
     );

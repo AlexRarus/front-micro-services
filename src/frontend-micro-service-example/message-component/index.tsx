@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { subscribeOnMessage, sendMessage, resizeWindow } from '../service';
+import { resizeWindow, subscribeOnMessages, submitMessage } from '../service';
+
 import {
   Label,
   MessageWrapper,
@@ -27,7 +28,7 @@ export default class MessageComponent extends Component<IProps, IState> {
   };
 
   componentDidMount() {
-    subscribeOnMessage(this.getMessage);
+    subscribeOnMessages(this.getMessage);
   }
 
   onChange = (e: any) => {
@@ -46,7 +47,7 @@ export default class MessageComponent extends Component<IProps, IState> {
       payload: { value }
     };
 
-    sendMessage(message);
+    submitMessage(message);
 
     this.setState({
       sentMessages: [...sentMessages, message],

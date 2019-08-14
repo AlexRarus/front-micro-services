@@ -1,47 +1,32 @@
 import React, { Component, createRef } from 'react';
+import { MessageEmitter, IMessageEmitter, IMessage, IMessageHandler } from 'components/core';
 
+import { IService, IServiceConfig } from './interfaces';
 import {
   ServiceWrapper,
   GlobalStyle
 } from './style';
 
-interface IState {
-  width: number;
-}
-
-interface IMessageType {
-  type: string;
-  payload?: any;
-}
-
-interface MessageHandler {
-  (message: any): any;
-}
-
-export interface IService {
-  sendMessage: (message: IMessageType) => void;
-  resizeWindow: () => any;
-  subscribeOnMessage(handler: MessageHandler): any;
-  loadComponent(ReactComponent: any): any;
-}
+interface IState {}
 
 export class Service implements IService {
-  private handlers: any[] = [];
+  public messageEmitter: IMessageEmitter;
+  public serviceId: string;
   private loaded: boolean = false;
   private targetComponent: any;
+  public subscribeOnMessages: (handler: IMessageHandler) => any;
+  public submitMessage: (message: IMessage) => any;
 
-  constructor() {
+  constructor(config: IServiceConfig) {
+    this.serviceId = config.serviceId;
     this.loadComponent = this.loadComponent.bind(this);
+    this.messageEmitter = new MessageEmitter({
+      sender: config.serviceId,
+      receiver: 'parent'
+    });
+    this.subscribeOnMessages = this.messageEmitter.subscribeOnMessages;
+    this.submitMessage = this.messageEmitter.submitMessage;
   }
-
-  sendMessage = ({ type, payload = {} }: IMessageType) => {
-    const data = {
-      type,
-      payload
-    };
-    const jsonData = JSON.stringify(data);
-    window.parent.postMessage(jsonData, '*');
-  };
 
   resizeWindow = async () => {
     this.initDetect();
@@ -49,7 +34,10 @@ export class Service implements IService {
     const payload = {
       height: componentMetrics.height
     };
-    this.sendMessage({ type: 'resize', payload });
+    this.messageEmitter.submitMessage({
+      type: 'resize',
+      payload
+    });
   };
 
   private getMetrics = () => {
@@ -62,10 +50,6 @@ export class Service implements IService {
         resolve(component ? component.getBoundingClientRect() : defaultBox);
       }, 0);
     });
-  };
-
-  subscribeOnMessage = (handler: (message: any) => any) => {
-    this.handlers.push(handler);
   };
 
   private initDetect = () => {
@@ -85,34 +69,25 @@ export class Service implements IService {
         constructor(props: TProps) {
           super(props);
 
-          this.state = {
-            width: 0
-          };
           this.componentRef = createRef();
-          window.addEventListener('message', this.getMessage);
+          self.messageEmitter.subscribeOnMessages(this.actionSwitcher);
         }
 
         componentDidMount(): void {
           self.targetComponent = this.componentRef.current;
-          self.sendMessage({ type: 'init' });
+          self.messageEmitter.submitMessage({
+            type: 'init'
+          });
         }
 
-        componentWillUnmount(): void {
-          window.removeEventListener('message', this.getMessage);
+        componentWillUnmount() {
+          self.messageEmitter.destroy();
         }
 
-        getMessage = (e: any) => {
-          try {
-            const data: any = JSON.parse(e.data);
-
-            this.actionSwitcher(data);
-          } catch (error) {
-            console.log(error);
-          }
-        };
-
-        actionSwitcher = (data: any) => {
+        actionSwitcher = (data: IMessage) => {
           const { type, payload }  = data;
+
+          console.log('service-actionSwitcher: ', data);
 
           switch (type) {
             case 'init':
@@ -125,16 +100,12 @@ export class Service implements IService {
             default:
               break;
           }
-
-          self.handlers.forEach((handler: any) => handler(data));
         };
 
         render() {
-          const { width } = this.state;
 
           return (
             <ServiceWrapper
-              width={width}
               ref={this.componentRef}
             >
               <GlobalStyle />
