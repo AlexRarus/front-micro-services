@@ -14,7 +14,7 @@ export class MessageEmitter implements IMessageEmitter {
 
   constructor(config: IMessageEmitterConfig) {
     this.sender = config.sender;
-    this.receiver = config.receiver;
+    this.receiver = config.receiver || 'parent';
     // по-умолчанию обрабатывать сообщения только от отправителя с таким же id
     this.allowedSenderIds = config.allowedSenderIds || [this.sender];
 

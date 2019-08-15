@@ -8,22 +8,197 @@ Using npm:
 ```shell
 $ npm i --save @truefalse/front-micro-services
 ```
-## Example Usage
-Create Service:
+## Components
+```js
+import {
+  Service, // for module project
+  ServiceLoader, // for parent project
+  MessageEmitter // for sending and receiving messages between modules
+} from '@truefalse/front-micro-services';
+```
+
+#### Service init
+```js
+import { Service } from '@truefalse/front-micro-services';
+
+const config = {
+  serviceId: 'my-service' // required
+};
+
+const myService = new Service(config);
+
+myService.loadComponent(MyReactComponent); // load component as service
+myService.resizeWindow(); // tell parent to resize
+myService.submitMessage({ type: 'say', payload: 'hello' }); // submit custom message to parent
+myService.subscribeOnMessages(handler); // subscribe on messages from parent
+```
+
+##### Service config
+<table>
+	<tr>
+		<th>name</th>
+		<th>type</th>
+		<th>required</th>
+		<th>description</th>
+	</tr>
+	<tr>
+		<td>serviceId</td>
+		<td>string</td>
+		<td>true</td>
+		<td>service id for sending and receiving messages</td>
+	</tr>
+</table>
+
+##### Service methods
+<table>
+	<tr>
+		<th>name</th>
+		<th>params</th>
+		<th>description</th>
+	</tr>
+	<tr>
+		<td>loadComponent</td>
+		<td>ReactComponent</td>
+		<td>must be called to initialize the service</td>
+	</tr>
+	<tr>
+		<td>resizeWindow</td>
+		<td>-</td>
+		<td>tell parent to resize window</td>
+	</tr>
+	<tr>
+		<td>submitMessage</td>
+		<td>message: { type: string, payload: any }</td>
+		<td>submit custom message to parent</td>
+	</tr>
+	<tr>
+		<td>subscribeOnMessages</td>
+		<td>handler: (message: any) => any)</td>
+		<td>subscribe on messages from parent</td>
+	</tr>
+</table>
+
+#### ServiceLoader init
+```js
+import React from 'react';
+import { ServiceLoader } from '@truefalse/front-micro-services';
+
+const componnet = () => (
+  <ServiceLoader
+    id="my-service"
+    src="http://my-service.com"
+  />
+);
+```
+##### ServiceLoader props
+<table>
+	<tr>
+		<th>name</th>
+		<th>type</th>
+		<th>required</th>
+		<th>description</th>
+	</tr>
+	<tr>
+		<td>id</td>
+		<td>string</td>
+		<td>true</td>
+		<td>service id for sending and receiving messages</td>
+	</tr>
+	<tr>
+		<td>src</td>
+		<td>string</td>
+		<td>true</td>
+		<td>Servise URL</td>
+	</tr>
+</table>
+
+#### MessageEmitter init
+```js
+import React from 'react';
+import { MessageEmitter } from '@truefalse/front-micro-services';
+
+const config = {
+  sender: 'service', // required
+  receiver: 'parent', // required
+};
+
+const messageEmitter = new MessageEmitter(config);
+```
+##### MessageEmitter config
+<table>
+	<tr>
+		<th>name</th>
+		<th>type</th>
+		<th>required</th>
+		<th>default</th>
+		<th>description</th>
+	</tr>
+	<tr>
+		<td>sender</td>
+		<td>string</td>
+		<td>true</td>
+		<td>-</td>
+		<td>id for sending messages</td>
+	</tr>
+	<tr>
+		<td>receiver</td>
+		<td>string</td>
+		<td>false</td>
+		<td>'parent'</td>
+		<td>id for receiving messages, if set 'parent' messages will be sent to the parent window</td>
+	</tr>
+	<tr>
+		<td>allowedSenderIds</td>
+		<td>string[]</td>
+		<td>false</td>
+		<td>[sender]</td>
+		<td>list of allowed id for receiving messages</td>
+	</tr>
+</table>
+
+##### MessageEmitter methods
+<table>
+	<tr>
+		<th>name</th>
+		<th>params</th>
+		<th>description</th>
+	</tr>
+	<tr>
+		<td>destroy</td>
+		<td>-</td>
+		<td>remove message event listener on window</td>
+	</tr>
+	<tr>
+		<td>submitMessage</td>
+		<td>message: { type: string, payload: any }</td>
+		<td>submit custom message to `receiver`</td>
+	</tr>
+	<tr>
+		<td>subscribeOnMessages</td>
+		<td>handler: (message: any) => any)</td>
+		<td>subscribe on messages from `allowedSenderIds`</td>
+	</tr>
+</table>
+
+### Usage:
+#### Create Service:
 ```js
 // service.js
 import { Service } from '@truefalse/front-micro-services';
 
+const serviceOptions = {
+  serviceId: 'service-example' // required
+};
+
 export const {
   loadComponent, // load component as service
   resizeWindow, // resizing a service window when resizing its content
-  sendMessage, // send message to parent
-  subscribeOnMessage // subscription to incoming messages
-} = new Service();
-
+  submitMessage, // send message to parent
+  subscribeOnMessages // subscription to incoming messages
+} = new Service({ serviceId: 'service-example' });
 ```
 
-Load component as service
+#### Load component
 ```jsx
 // service application index.jsx
 import React, { Component } from 'react';
@@ -33,7 +208,7 @@ import {
   ServiceApplicationWrapper
 } from './style';
 
-class FrontendMicroService extends Component {
+class FrontendMicroServiceApp extends Component {
   render() {
     return (
       <ServiceApplicationWrapper>
@@ -47,11 +222,11 @@ export default loadComponent(FrontendMicroService); // load component as service
 
 ```
 
-Use service's hooks
+#### Use service's methods
 ```jsx
 // application.jsx
 import React, { Component } from 'react';
-import { subscribeOnMessage, sendMessage, resizeWindow } from './service';
+import { subscribeOnMessages, submitMessage, resizeWindow } from './service';
 import {
   Label,
   MessageWrapper,
@@ -71,7 +246,7 @@ export default class Application extends Component {
   };
 
   componentDidMount() {
-    subscribeOnMessage(this.getMessage); // subscription to incoming messages
+    subscribeOnMessages(this.getMessage); // subscription to incoming messages
   }
 
   onChange = (e) => {
@@ -83,14 +258,14 @@ export default class Application extends Component {
     });
   };
 
-  sendMessage = () => {
+  submitMessage = () => {
     const { value, sentMessages } = this.state;
     const message = {
       type: 'service',
       payload: { value }
     };
 
-    sendMessage(message); // send message to parent
+    submitMessage(message); // send message to parent
 
     this.setState({
       sentMessages: [...sentMessages, message],
@@ -119,13 +294,13 @@ export default class Application extends Component {
   };
 
   render() {
-    const { value, incomingMessages, sentMessages } = this.state;
+    const { value, incomingMessages, submitMessage } = this.state;
 
     return(
       <MessageWrapper>
         <Row>
           <Input onChange={this.onChange} value={value} />
-          <Button onClick={this.sendMessage}>Send message to parent</Button>
+          <Button onClick={this.submitMessage}>Send message to parent</Button>
           <Button onClick={this.resizeWindow}>Resize window</Button>
         </Row>
         <Row>
@@ -147,7 +322,7 @@ export default class Application extends Component {
 ```
 
 
-Include service in parent
+#### Include service in parent
 
 ```jsx
 import React, { Component } from 'react';
@@ -176,9 +351,9 @@ export default class ServiceLoaderExample extends Component {
           />
         </Block>
         <ServiceLoader
-          id="service-id"
-          src="http://localhost:3333/service"
-        />
+		  id="service-example"
+		  src="http://service-example.com"
+		/>
       </Wrapper>
     );
   }
@@ -186,11 +361,13 @@ export default class ServiceLoaderExample extends Component {
 
 ```
 
-Parent communication with the service
+#### Parent communication with the service
 
 ```jsx
 // message-component.jsx
 import React, { Component } from 'react';
+import { MessageEmitter, IMessageEmitter, IMessage } from 'components/core';
+
 import {
   Label,
   MessageWrapper,
@@ -202,6 +379,11 @@ import {
   Button
 } from './style';
 
+const messageEmitter: IMessageEmitter = new MessageEmitter({
+  sender: 'service-example',
+  receiver: 'service-example'
+});
+
 export default class MessageComponent extends Component {
   state = {
     value: '',
@@ -210,11 +392,11 @@ export default class MessageComponent extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('message', this.getMessage); // subscribe on messages
+    messageEmitter.subscribeOnMessages(this.getMessage);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('message', this.getMessage); // unsubscribe
+    messageEmitter.destroy();
   }
 
   onChange = (e) => {
@@ -227,16 +409,13 @@ export default class MessageComponent extends Component {
   };
 
   sendMessage = () => {
-    const { serviceId } = this.props;
     const { value, sentMessages } = this.state;
-    const message = {
+    const message: any = {
       type: 'parent',
       payload: { value }
     };
-    const jsonData = JSON.stringify(message);
-    const serviceFrame = document.getElementById(serviceId);
 
-    serviceFrame && serviceFrame.contentWindow.postMessage(jsonData, '*'); // send message to service
+    messageEmitter.submitMessage(message);
 
     this.setState({
       sentMessages: [...sentMessages, message],
@@ -244,19 +423,12 @@ export default class MessageComponent extends Component {
     })
   };
 
-  getMessage = (event) => {
-    const { data } = event;
+  getMessage = (message: IMessage) => {
     const { incomingMessages } = this.state;
 
-    try {
-      const parsedData: any = JSON.parse(data);
-
-      this.setState({
-        incomingMessages: [...incomingMessages, parsedData]
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.setState({
+      incomingMessages: [...incomingMessages, message]
+    });
   };
 
   renderMessages = (message, index) => {
@@ -292,3 +464,4 @@ export default class MessageComponent extends Component {
 }
 
 ```
+
