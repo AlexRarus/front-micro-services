@@ -1,5 +1,5 @@
-/// <reference types="lodash" />
 import { Component } from 'react';
+import { IMessageEmitter, IMessage } from 'components/core';
 interface IProps {
     id: string;
     src: string;
@@ -7,23 +7,12 @@ interface IProps {
 interface IState {
     initialized: boolean;
     height: number;
-    regExp: any;
-}
-interface IMessageType {
-    type: string;
-    payload?: any;
 }
 export declare class ServiceLoader extends Component<IProps, IState> {
-    componentRef: any;
-    frameRef: any;
+    messageEmitter: IMessageEmitter;
     constructor(props: IProps);
-    componentDidMount(): void;
     componentWillUnmount(): void;
-    onResize: (() => void) & import("lodash").Cancelable;
-    getMessage: (e: any) => void;
-    sendMessage: ({ type, payload }: IMessageType) => void;
-    getMetrics: () => any;
-    actionSwitcher: (data: any) => void;
+    actionSwitcher: (data: IMessage) => void;
     render(): JSX.Element;
 }
 export {};

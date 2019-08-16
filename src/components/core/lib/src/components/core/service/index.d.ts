@@ -1,26 +1,15 @@
-interface IMessageType {
-    type: string;
-    payload?: any;
-}
-interface MessageHandler {
-    (message: any): any;
-}
-export interface IService {
-    sendMessage: (message: IMessageType) => void;
-    resizeWindow: () => any;
-    subscribeOnMessage(handler: MessageHandler): any;
-    loadComponent(ReactComponent: any): any;
-}
+import { IMessageEmitter, IMessage, IMessageHandler } from 'components/core';
+import { IService, IServiceConfig } from './interfaces';
 export declare class Service implements IService {
-    private handlers;
+    messageEmitter: IMessageEmitter;
+    serviceId: string;
     private loaded;
     private targetComponent;
-    constructor();
-    sendMessage: ({ type, payload }: IMessageType) => void;
+    subscribeOnMessages: (handler: IMessageHandler) => any;
+    submitMessage: (message: IMessage) => any;
+    constructor(config: IServiceConfig);
     resizeWindow: () => Promise<void>;
     private getMetrics;
-    subscribeOnMessage: (handler: (message: any) => any) => void;
     private initDetect;
     loadComponent<TProps>(TargetComponent: any): any;
 }
-export {};

@@ -12,9 +12,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var styled_components_1 = __importStar(require("styled-components"));
-exports.ServiceWrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  box-sizing: border-box;\n  position: absolute;\n  width: ", ";\n"], ["\n  box-sizing: border-box;\n  position: absolute;\n  width: ", ";\n"])), function (_a) {
-    var width = _a.width;
-    return width + "px";
-});
+exports.ServiceWrapper = styled_components_1.default.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  box-sizing: border-box;\n  position: absolute;\n  width: 100%;\n"], ["\n  box-sizing: border-box;\n  position: absolute;\n  width: 100%;\n"])));
 exports.GlobalStyle = styled_components_1.createGlobalStyle(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  html, body {\n    height: 100%;\n    margin: 0;\n    padding: 0;\n  }\n"], ["\n  html, body {\n    height: 100%;\n    margin: 0;\n    padding: 0;\n  }\n"])));
 var templateObject_1, templateObject_2;

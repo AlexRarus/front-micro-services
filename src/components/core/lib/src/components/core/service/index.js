@@ -67,21 +67,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
+var core_1 = require("components/core");
 var style_1 = require("./style");
 var Service = /** @class */ (function () {
-    function Service() {
+    function Service(config) {
         var _this = this;
-        this.handlers = [];
         this.loaded = false;
-        this.sendMessage = function (_a) {
-            var type = _a.type, _b = _a.payload, payload = _b === void 0 ? {} : _b;
-            var data = {
-                type: type,
-                payload: payload
-            };
-            var jsonData = JSON.stringify(data);
-            window.parent.postMessage(jsonData, '*');
-        };
         this.resizeWindow = function () { return __awaiter(_this, void 0, void 0, function () {
             var componentMetrics, payload;
             return __generator(this, function (_a) {
@@ -94,7 +85,10 @@ var Service = /** @class */ (function () {
                         payload = {
                             height: componentMetrics.height
                         };
-                        this.sendMessage({ type: 'resize', payload: payload });
+                        this.messageEmitter.submitMessage({
+                            type: 'resize',
+                            payload: payload
+                        });
                         return [2 /*return*/];
                 }
             });
@@ -109,15 +103,19 @@ var Service = /** @class */ (function () {
                 }, 0);
             });
         };
-        this.subscribeOnMessage = function (handler) {
-            _this.handlers.push(handler);
-        };
         this.initDetect = function () {
             if (!_this.loaded) {
                 throw new Error('module is not loaded');
             }
         };
+        this.serviceId = config.serviceId;
         this.loadComponent = this.loadComponent.bind(this);
+        this.messageEmitter = new core_1.MessageEmitter({
+            sender: config.serviceId,
+            receiver: 'parent'
+        });
+        this.subscribeOnMessages = this.messageEmitter.subscribeOnMessages;
+        this.submitMessage = this.messageEmitter.submitMessage;
     }
     Service.prototype.loadComponent = function (TargetComponent) {
         if (!this.loaded) {
@@ -127,17 +125,9 @@ var Service = /** @class */ (function () {
                 __extends(WrapperModule, _super);
                 function WrapperModule(props) {
                     var _this = _super.call(this, props) || this;
-                    _this.getMessage = function (e) {
-                        try {
-                            var data = JSON.parse(e.data);
-                            _this.actionSwitcher(data);
-                        }
-                        catch (error) {
-                            console.log(error);
-                        }
-                    };
                     _this.actionSwitcher = function (data) {
                         var type = data.type, payload = data.payload;
+                        console.log('service-actionSwitcher: ', data);
                         switch (type) {
                             case 'init':
                                 payload && _this.setState(payload);
@@ -149,25 +139,22 @@ var Service = /** @class */ (function () {
                             default:
                                 break;
                         }
-                        self_1.handlers.forEach(function (handler) { return handler(data); });
-                    };
-                    _this.state = {
-                        width: 0
                     };
                     _this.componentRef = react_1.createRef();
-                    window.addEventListener('message', _this.getMessage);
+                    self_1.messageEmitter.subscribeOnMessages(_this.actionSwitcher);
                     return _this;
                 }
                 WrapperModule.prototype.componentDidMount = function () {
                     self_1.targetComponent = this.componentRef.current;
-                    self_1.sendMessage({ type: 'init' });
+                    self_1.messageEmitter.submitMessage({
+                        type: 'init'
+                    });
                 };
                 WrapperModule.prototype.componentWillUnmount = function () {
-                    window.removeEventListener('message', this.getMessage);
+                    self_1.messageEmitter.destroy();
                 };
                 WrapperModule.prototype.render = function () {
-                    var width = this.state.width;
-                    return (react_1.default.createElement(style_1.ServiceWrapper, { width: width, ref: this.componentRef },
+                    return (react_1.default.createElement(style_1.ServiceWrapper, { ref: this.componentRef },
                         react_1.default.createElement(style_1.GlobalStyle, null),
                         react_1.default.createElement(TargetComponent, __assign({}, this.props))));
                 };
