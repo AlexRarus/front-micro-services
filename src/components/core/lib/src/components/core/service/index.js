@@ -127,7 +127,6 @@ var Service = /** @class */ (function () {
                     var _this = _super.call(this, props) || this;
                     _this.actionSwitcher = function (data) {
                         var type = data.type, payload = data.payload;
-                        console.log('service-actionSwitcher: ', data);
                         switch (type) {
                             case 'init':
                                 payload && _this.setState(payload);

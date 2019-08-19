@@ -59,7 +59,7 @@ var ServiceLoader = /** @class */ (function (_super) {
         var _a = this.props, src = _a.src, id = _a.id;
         var height = this.state.height;
         return (react_1.default.createElement(style_1.ServiceLoaderWrapper, null,
-            react_1.default.createElement(style_1.ServiceFrame, { src: src, id: id, name: id, height: height, frameBorder: "0" })));
+            react_1.default.createElement(style_1.ServiceFrame, { src: src, id: id, name: id, height: height, frameBorder: "0", scrolling: "no" })));
     };
     return ServiceLoader;
 }(react_1.Component));
