@@ -89,8 +89,6 @@ export class Service implements IService {
         actionSwitcher = (data: IMessage) => {
           const { type, payload }  = data;
 
-          console.log('service-actionSwitcher: ', data);
-
           switch (type) {
             case 'init':
               payload && this.setState(payload);

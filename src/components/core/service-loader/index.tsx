@@ -69,6 +69,7 @@ export class ServiceLoader extends Component<IProps, IState> {
           name={id}
           height={height}
           frameBorder="0"
+          scrolling="no"
         />
       </ServiceLoaderWrapper>
     );

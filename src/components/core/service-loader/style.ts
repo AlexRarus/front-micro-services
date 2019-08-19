@@ -14,4 +14,5 @@ export const ServiceFrame: any = styled.iframe`
   outline: none;
   height: ${({ height }: IFrameProps) => `${height ? `${height}px` : 'auto'}`};
   width: 100%;
+  overflow: hidden;
 `;
