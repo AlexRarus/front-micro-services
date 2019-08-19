@@ -1,4 +1,4 @@
-import { IMessage, IMessageEmitter, IMessageHandler } from "components/core";
+import { IMessage, IMessageEmitter, IMessageHandler } from '../message-emitter/interfaces';
 export interface IServiceConfig {
     serviceId: string;
 }
