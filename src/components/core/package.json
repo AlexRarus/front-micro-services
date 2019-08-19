@@ -1,6 +1,6 @@
 {
   "name": "@truefalse/front-micro-services",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "",
   "main": "webpack.config.babel.js",
   "dependencies": {

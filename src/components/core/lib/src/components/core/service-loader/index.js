@@ -21,7 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
-var core_1 = require("components/core");
+var message_emitter_1 = require("../message-emitter");
 var style_1 = require("./style");
 var ServiceLoader = /** @class */ (function (_super) {
     __extends(ServiceLoader, _super);
@@ -45,7 +45,7 @@ var ServiceLoader = /** @class */ (function (_super) {
             initialized: false,
             height: 0
         };
-        _this.messageEmitter = new core_1.MessageEmitter({
+        _this.messageEmitter = new message_emitter_1.MessageEmitter({
             sender: props.id,
             receiver: props.id
         });

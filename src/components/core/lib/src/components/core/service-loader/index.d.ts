@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { IMessageEmitter, IMessage } from 'components/core';
+import { IMessageEmitter, IMessage } from '../message-emitter/interfaces';
 interface IProps {
     id: string;
     src: string;

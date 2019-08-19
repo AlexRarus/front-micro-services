@@ -1,4 +1,4 @@
-import { IMessageEmitter, IMessage, IMessageHandler } from 'components/core';
+import { IMessageEmitter, IMessage, IMessageHandler } from '../message-emitter/interfaces';
 import { IService, IServiceConfig } from './interfaces';
 export declare class Service implements IService {
     messageEmitter: IMessageEmitter;

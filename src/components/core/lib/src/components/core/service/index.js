@@ -67,7 +67,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
-var core_1 = require("components/core");
+var message_emitter_1 = require("../message-emitter");
 var style_1 = require("./style");
 var Service = /** @class */ (function () {
     function Service(config) {
@@ -110,7 +110,7 @@ var Service = /** @class */ (function () {
         };
         this.serviceId = config.serviceId;
         this.loadComponent = this.loadComponent.bind(this);
-        this.messageEmitter = new core_1.MessageEmitter({
+        this.messageEmitter = new message_emitter_1.MessageEmitter({
             sender: config.serviceId,
             receiver: 'parent'
         });
