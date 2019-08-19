@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { MessageEmitter, IMessageEmitter, IMessage } from 'components/core';
+
+import { MessageEmitter } from '../message-emitter';
+import { IMessageEmitter, IMessage } from '../message-emitter/interfaces';
 
 import {
   ServiceLoaderWrapper,

@@ -1,5 +1,7 @@
 import React, { Component, createRef } from 'react';
-import { MessageEmitter, IMessageEmitter, IMessage, IMessageHandler } from 'components/core';
+
+import { MessageEmitter } from '../message-emitter';
+import { IMessageEmitter, IMessage, IMessageHandler } from '../message-emitter/interfaces';
 
 import { IService, IServiceConfig } from './interfaces';
 import {
