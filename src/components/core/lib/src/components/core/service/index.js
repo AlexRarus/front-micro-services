@@ -68,7 +68,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var message_emitter_1 = require("../message-emitter");
-var style_1 = require("./style");
 var Service = /** @class */ (function () {
     function Service(config) {
         var _this = this;
@@ -153,8 +152,7 @@ var Service = /** @class */ (function () {
                     self_1.messageEmitter.destroy();
                 };
                 WrapperModule.prototype.render = function () {
-                    return (react_1.default.createElement(style_1.ServiceWrapper, { ref: this.componentRef },
-                        react_1.default.createElement(style_1.GlobalStyle, null),
+                    return (react_1.default.createElement("div", { ref: this.componentRef, style: { boxSizing: 'border-box', position: 'absolute', width: '100%' } },
                         react_1.default.createElement(TargetComponent, __assign({}, this.props))));
                 };
                 return WrapperModule;

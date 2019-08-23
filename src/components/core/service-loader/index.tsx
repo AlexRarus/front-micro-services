@@ -3,11 +3,6 @@ import React, { Component } from 'react';
 import { MessageEmitter } from '../message-emitter';
 import { IMessageEmitter, IMessage } from '../message-emitter/interfaces';
 
-// import {
-//   ServiceLoaderWrapper,
-//   ServiceFrame
-// } from './style';
-
 interface IProps {
   id: string;
   src: string;
