@@ -22,7 +22,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
 var message_emitter_1 = require("../message-emitter");
-var style_1 = require("./style");
 var ServiceLoader = /** @class */ (function (_super) {
     __extends(ServiceLoader, _super);
     function ServiceLoader(props) {
@@ -58,8 +57,8 @@ var ServiceLoader = /** @class */ (function (_super) {
     ServiceLoader.prototype.render = function () {
         var _a = this.props, src = _a.src, id = _a.id;
         var height = this.state.height;
-        return (react_1.default.createElement(style_1.ServiceLoaderWrapper, null,
-            react_1.default.createElement(style_1.ServiceFrame, { src: src, id: id, name: id, height: height, frameBorder: "0", scrolling: "no" })));
+        return (react_1.default.createElement("div", { style: { boxSizing: 'border-box' } },
+            react_1.default.createElement("iframe", { src: src, id: id, name: id, height: height ? height + "px" : 'auto', style: { overflow: 'hidden', width: '100%' }, frameBorder: "0", scrolling: "no" })));
     };
     return ServiceLoader;
 }(react_1.Component));
