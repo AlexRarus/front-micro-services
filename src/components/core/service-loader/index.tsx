@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import { MessageEmitter } from '../message-emitter';
 import { IMessageEmitter, IMessage } from '../message-emitter/interfaces';
 
-import {
-  ServiceLoaderWrapper,
-  ServiceFrame
-} from './style';
+// import {
+//   ServiceLoaderWrapper,
+//   ServiceFrame
+// } from './style';
 
 interface IProps {
   id: string;
@@ -62,16 +62,17 @@ export class ServiceLoader extends Component<IProps, IState> {
     const { height } = this.state;
 
     return (
-      <ServiceLoaderWrapper>
-        <ServiceFrame
+      <div style={{ boxSizing: 'border-box' }}>
+        <iframe
           src={src}
           id={id}
           name={id}
-          height={height}
+          height={height ? `${height}px` : 'auto'}
+          style={{ overflow: 'hidden', width: '100%' }}
           frameBorder="0"
           scrolling="no"
         />
-      </ServiceLoaderWrapper>
+      </div>
     );
   }
 }

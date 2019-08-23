@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { loadComponent } from './service';
 import MessageComponent from './message-component';
 import {
+  GlobalStyle,
   FrontendMicroServiceExampleWrapper,
   Block,
   Paragraph
@@ -14,6 +15,7 @@ class FrontendMicroServiceExample extends Component<IProps, IState> {
   render() {
     return (
       <FrontendMicroServiceExampleWrapper>
+        <GlobalStyle />
         <Block>
           <Paragraph>
             Компонент сервиса

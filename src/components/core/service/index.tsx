@@ -4,10 +4,6 @@ import { MessageEmitter } from '../message-emitter';
 import { IMessageEmitter, IMessage, IMessageHandler } from '../message-emitter/interfaces';
 
 import { IService, IServiceConfig } from './interfaces';
-import {
-  ServiceWrapper,
-  GlobalStyle
-} from './style';
 
 interface IState {}
 
@@ -105,14 +101,14 @@ export class Service implements IService {
         render() {
 
           return (
-            <ServiceWrapper
+            <div
               ref={this.componentRef}
+              style={{ boxSizing: 'border-box', position: 'absolute', width: '100%' }}
             >
-              <GlobalStyle />
               <TargetComponent
                 {...this.props}
               />
-            </ServiceWrapper>
+            </div>
           );
         }
       }
