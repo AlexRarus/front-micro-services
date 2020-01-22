@@ -53,9 +53,7 @@ var MessageEmitter = /** @class */ (function () {
                     _this.handlers.forEach(function (handler) { return handler(data_1); });
                 }
             }
-            catch (error) {
-                console.log(error);
-            }
+            catch (error) { }
         };
         this.sender = config.sender;
         this.receiver = config.receiver || 'parent';
