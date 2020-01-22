@@ -72,8 +72,6 @@ export class MessageEmitter implements IMessageEmitter {
       if (this.allowedSenderIds.includes(data.sender)) {
         this.handlers.forEach((handler: IMessageHandler) => handler(data));
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 }

@@ -10,17 +10,7 @@ import {
 
 export default class Application extends Component<{}> {
   @lazyInject(RoutingStore) readonly routingStore: RoutingStore;
-  constructor(props: {}) {
-    super(props);
 
-    window.addEventListener('message', (e: any) => {
-      try {
-        console.log(JSON.parse(e.data));
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  }
   render() {
     const { routes } = this.routingStore;
 
